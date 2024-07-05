@@ -1,9 +1,6 @@
 package org.labellum.mc.dttfc.client;
 
-import org.labellum.mc.dttfc.DTTFC;
-import net.minecraftforge.client.event.ModelBakeEvent;
-import net.minecraftforge.client.event.ModelRegistryEvent;
-import net.minecraftforge.client.model.ModelLoaderRegistry;
+import net.minecraftforge.client.event.ModelEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
@@ -16,12 +13,12 @@ public final class ClientModEvents
         bus.addListener(ClientModEvents::onModelRegister);
     }
 
-    public static void onModelRegister(ModelRegistryEvent event)
+    public static void onModelRegister(ModelEvent.RegisterGeometryLoaders event)
     {
-        ModelLoaderRegistry.registerLoader(DTTFC.identifier("palm_fronds"), new PalmLeavesModelLoader());
+        event.register("palm_fronds", new PalmLeavesModelLoader());
     }
 
-    public static void onModelBake(ModelBakeEvent event)
+    public static void onModelBake(ModelEvent.BakingCompleted event)
     {
         // Setup fronds models
         PalmLeavesBakedModel.INSTANCES.forEach(PalmLeavesBakedModel::setupModels);

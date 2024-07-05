@@ -64,6 +64,12 @@
   "block.dttfc.kapok_undergrowth_leaves": "Kapok Undergrowth Leaves",
   "item.dttfc.kapok_seed": "Kapok Seed",
   "block.dttfc.kapok_root": "Kapok Root",
+  "block.dttfc.mangrove_branch": "Mangrove Branch",
+  "block.dttfc.stripped_mangrove_branch": "Stripped Mangrove Branch",
+  "block.dttfc.mangrove_sapling": "Mangrove Sapling",
+  "species.dttfc.mangrove": "Mangrove",
+  "block.dttfc.mangrove_leaves": "Mangrove Leaves",
+  "item.dttfc.mangrove_seed": "Mangrove Seed",
   "block.dttfc.maple_branch": "Maple Branch",
   "block.dttfc.stripped_maple_branch": "Stripped Maple Branch",
   "block.dttfc.maple_sapling": "Maple Sapling",
@@ -131,6 +137,7 @@
   "block.dttfc.willow_leaves": "Willow Leaves",
   "block.dttfc.willow_undergrowth_leaves": "Willow Undergrowth Leaves",
   "item.dttfc.willow_seed": "Willow Seed",
+  "block.dttfc.mangrove_roots": "Mangrove Roots",
   "block.dttfc.rooty_sandy_loam_mud": "Rooty Sandy Loam Mud",
   "block.dttfc.rooty_sandy_loam_dirt": "Rooty Sandy Loam Dirt",
   "block.dttfc.rooty_sandy_loam_grass": "Rooty Sandy Loam Grass",
@@ -149,5 +156,7 @@
   "block.dttfc.rooty_pink_sand": "Rooty Pink Sand",
   "block.dttfc.rooty_red_sand": "Rooty Red Sand",
   "block.dttfc.rooty_white_sand": "Rooty White Sand",
-  "block.dttfc.rooty_yellow_sand": "Rooty Yellow Sand"
+  "block.dttfc.rooty_yellow_sand": "Rooty Yellow Sand",
+  "block.dttfc.rooty_mangrove_aerial_roots": "Rooty Mangrove Aerial Roots",
+  "block.dttfc.rooty_salt_water": "Rooty Salt Water"
 }

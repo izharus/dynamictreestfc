@@ -23,6 +23,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.SectionPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.WorldGenRegion;
+import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.biome.Biome;
@@ -32,6 +34,7 @@ import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
 import org.jetbrains.annotations.Nullable;
 
+import net.dries007.tfc.common.blocks.wood.FallenLeavesBlock;
 import net.dries007.tfc.common.fluids.FluidHelpers;
 import net.dries007.tfc.util.EnvironmentHelpers;
 import net.dries007.tfc.world.chunkdata.ChunkData;
@@ -55,7 +58,7 @@ public class DynamicForestFeature extends Feature<ForestConfig>
         final LevelContext levelContext = LevelContext.create(context.level());
         final WorldGenLevel level = context.level();
         final BlockPos pos = context.origin();
-        final Random rand = context.random();
+        final var rand = context.random();
         final ForestConfig config = context.config();
         final ChunkDataProvider provider = ChunkDataProvider.get(context.chunkGenerator());
         final ChunkData data = provider.get(level, pos);
@@ -83,12 +86,13 @@ public class DynamicForestFeature extends Feature<ForestConfig>
         {
             placeUndergrowth(level, rand, pos, config, data, new BlockPos.MutableBlockPos(), forestTypeConfig.sampleBushCount(rand, forestTypeConfig.bushCount(), trees.get(), density));
             placeGroundcover(level, rand, pos, config, data, new BlockPos.MutableBlockPos(), forestTypeConfig.groundcoverCount().sample(rand));
+            placeLeafPile(level, rand, pos, config, data, new BlockPos.MutableBlockPos(), forestTypeConfig.leafPileCount().sample(rand));
         }
 
         return gen.get();
     }
 
-    protected boolean generateTrees(LevelContext levelContext, WorldGenLevel level, PoissonDisc disc, BlockPos originPos, AtomicInteger counter, ChunkData data, Random random, ForestConfig config, Function<DFEFeature.Entry, ResourceLocation> speciesFinder)
+    protected boolean generateTrees(LevelContext levelContext, WorldGenLevel level, PoissonDisc disc, BlockPos originPos, AtomicInteger counter, ChunkData data, RandomSource random, ForestConfig config, Function<DFEFeature.Entry, ResourceLocation> speciesFinder)
     {
         boolean gen = false;
         final BlockPos pos = new BlockPos(disc.x, level.getHeight(Heightmap.Types.WORLD_SURFACE_WG, disc.x, disc.z) - 1, disc.z);
@@ -103,7 +107,7 @@ public class DynamicForestFeature extends Feature<ForestConfig>
         return gen;
     }
 
-    protected DynamicTreeFeature.GeneratorResult generateTree(LevelContext levelContext, PoissonDisc circle, BlockPos originPos, BlockPos groundPos, ChunkData data, Random random, ForestConfig config, Function<DFEFeature.Entry, ResourceLocation> speciesFinder)
+    protected DynamicTreeFeature.GeneratorResult generateTree(LevelContext levelContext, PoissonDisc circle, BlockPos originPos, BlockPos groundPos, ChunkData data, RandomSource random, ForestConfig config, Function<DFEFeature.Entry, ResourceLocation> speciesFinder)
     {
         if (groundPos == BlockPos.ZERO)
         {
@@ -130,7 +134,7 @@ public class DynamicForestFeature extends Feature<ForestConfig>
                 {
                     if (species.isAcceptableSoilForWorldgen(levelContext.accessor(), groundPos, dirtState))
                     {
-                        final Biome biome = levelContext.level().getBiome(groundPos).value();
+                        final var biome = levelContext.level().getBiome(groundPos);
 
                         // noinspection removal
                         if (!species.generate(new GenerationContext(levelContext, species, originPos, groundPos.mutable(), biome, CoordUtils.getRandomDir(RANDOM), circle.radius, SafeChunkBounds.ANY_WG)))
@@ -157,7 +161,7 @@ public class DynamicForestFeature extends Feature<ForestConfig>
         }
     }
 
-    private void placeUndergrowth(WorldGenLevel level, Random random, BlockPos chunkBlockPos, ForestConfig config, ChunkData data, BlockPos.MutableBlockPos mutablePos, int tries)
+    private void placeUndergrowth(WorldGenLevel level, RandomSource random, BlockPos chunkBlockPos, ForestConfig config, ChunkData data, BlockPos.MutableBlockPos mutablePos, int tries)
     {
         final int chunkX = chunkBlockPos.getX();
         final int chunkZ = chunkBlockPos.getZ();
@@ -185,9 +189,8 @@ public class DynamicForestFeature extends Feature<ForestConfig>
                         BlockState dirtState = level.getBlockState(groundPos);
                         if (species.isAcceptableSoilForWorldgen(levelContext.accessor(), groundPos, dirtState))
                         {
-                            final Biome biome = levelContext.level().getBiome(groundPos).value();
+                            final var biome = levelContext.level().getBiome(groundPos);
 
-                            // noinspection removal
                             species.generate(new GenerationContext(levelContext, species, mutablePos, groundPos.mutable(), biome, CoordUtils.getRandomDir(RANDOM), 3, SafeChunkBounds.ANY_WG));
                         }
                     }
@@ -221,7 +224,7 @@ public class DynamicForestFeature extends Feature<ForestConfig>
         return true;
     }
 
-    private void placeGroundcover(WorldGenLevel level, Random random, BlockPos chunkBlockPos, ForestConfig config, ChunkData data, BlockPos.MutableBlockPos mutablePos, int tries)
+    private void placeGroundcover(WorldGenLevel level, RandomSource random, BlockPos chunkBlockPos, ForestConfig config, ChunkData data, BlockPos.MutableBlockPos mutablePos, int tries)
     {
         final int chunkX = chunkBlockPos.getX();
         final int chunkZ = chunkBlockPos.getZ();
@@ -250,8 +253,41 @@ public class DynamicForestFeature extends Feature<ForestConfig>
         }
     }
 
+
+    private void placeLeafPile(WorldGenLevel level, RandomSource random, BlockPos chunkBlockPos, ForestConfig config, ChunkData data, BlockPos.MutableBlockPos mutablePos, int tries)
+    {
+        final int chunkX = chunkBlockPos.getX();
+        final int chunkZ = chunkBlockPos.getZ();
+
+        mutablePos.set(chunkX + random.nextInt(16), 0, chunkZ + random.nextInt(16));
+        mutablePos.setY(level.getHeight(Heightmap.Types.OCEAN_FLOOR, mutablePos.getX(), mutablePos.getZ()));
+
+        final DFEFeature.Entry entry = getTree(data, random, config, mutablePos);
+        if (entry != null)
+        {
+            entry.entry().fallenLeaves().ifPresent(placementState -> {
+                for (int i = 0; i < tries; ++i)
+                {
+                    mutablePos.set(chunkX + random.nextInt(16), 0, chunkZ + random.nextInt(16));
+                    mutablePos.setY(level.getHeight(Heightmap.Types.OCEAN_FLOOR, mutablePos.getX(), mutablePos.getZ()));
+                    final BlockPos origin = mutablePos.immutable();
+
+                    for (int j = 0; j < 8; j++)
+                    {
+                        mutablePos.setWithOffset(origin, Mth.nextInt(random, -2, 2), 0, Mth.nextInt(random, -2, 2));
+                        if (level.getFluidState(mutablePos).isEmpty() && EnvironmentHelpers.isOnSturdyFace(level, mutablePos) && EnvironmentHelpers.isWorldgenReplaceable(level, mutablePos))
+                        {
+                            placementState = placementState.setValue(FallenLeavesBlock.LAYERS, Mth.nextInt(random, 1, FallenLeavesBlock.MAX_LAYERS - 3));
+                            level.setBlock(mutablePos, placementState, 3);
+                        }
+                    }
+                }
+            });
+        }
+    }
+
     @Nullable
-    private DFEFeature.Entry getTree(ChunkData chunkData, Random random, ForestConfig config, BlockPos pos)
+    private DFEFeature.Entry getTree(ChunkData chunkData, RandomSource random, ForestConfig config, BlockPos pos)
     {
         List<DFEFeature.Entry> entries = new ArrayList<>(4);
         float rainfall = chunkData.getRainfall(pos);

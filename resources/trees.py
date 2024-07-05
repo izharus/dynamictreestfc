@@ -20,6 +20,8 @@ def generate(rm: ResourceManager):
             species(rm, name, tapering=0.2, signal_energy=10, growth_rate=0.8, soil_str=2, growth_logic_kit='dttfc:diagonal_palm', soils=['dirt_like', 'sand_like'], spec_type='palm')
         elif name == 'kapok':
             species(rm, name, tapering=0.2, signal_energy=24, up_probability=3, lowest_branch_height=2, growth_rate=1, growth_logic_kit='jungle')
+        elif name == 'mangrove':
+            species(rm, name, tapering=0.25, signal_energy=20, up_probability=8, lowest_branch_height=2, growth_rate=0.6, spec_type='mangrove', soils=['dirt_like', 'mud_like', 'water_like'], extra_data={'root_tapering': 0.2, 'root_signal_energy': 20.0, 'roots_growth_logic_kit': 'mangrove_roots', 'primitive_sapling': 'mangrove_propagule', 'model_overrides': {'sapling': 'dynamictrees:block/smartmodel/water_sapling_thin'}, 'plantable_on_fluid': True})
         else:
             species(rm, name)
 
@@ -31,6 +33,8 @@ def generate(rm: ResourceManager):
             family(rm, name, thickness1=3, thickness2=4, fam_type='dttfc:diagonal_palm')
         elif name == 'kapok':
             family(rm, name, max_branch_radius=24, roots=True, max_signal=64)
+        elif name == 'mangrove':
+            family(rm, name, fam_type='dttfc:mangrove', max_branch_radius=8, extra_data={'default_soil': 'dttfc:mangrove_aerial_roots', 'primitive_root': 'tfc:tree_roots', 'primitive_filled_root': 'tfc:muddy_roots/loam', 'primitive_covered_root': 'tfc:mud/loam', 'root_system_acceptable_soils': ['dirt_like', 'mud_like', 'sand_like']})
         else:
             family(rm, name)
 
@@ -42,6 +46,8 @@ def generate(rm: ResourceManager):
             leaves_properties(rm, name, cell_kit='dttfc:palm', leaf_type='palm')
         elif name == 'kapok':
             leaves_properties(rm, name, light=12)
+        elif name == 'mangrove':
+            leaves_properties(rm, name, leaf_type='scruffy', smother=6)
         else:
             leaves_properties(rm, name)
 
@@ -59,6 +65,19 @@ def generate(rm: ResourceManager):
     for color in SAND_COLORS:
         soil_properties(rm, color, 'sand', soil_type='sand_like')
 
+    write(rm, 'soil_properties', 'mangrove_aerial_roots', {
+        'type': 'dttfc:aerial_roots',
+        'primitive_soil': 'tfc:wood/log/mangrove',
+        'acceptable_soils': []
+    })
+    rm.blockstate('rooty_mangrove_aerial_roots', variants=dict(('radius=%s' % i, {'model': 'dynamictrees:block/rooty_mangrove_aerial_roots_radius%s' % i}) for i in range(1, 9))).with_lang(lang('rooty mangrove aerial roots'))
+    write(rm, 'soil_properties', 'salt_water', {
+        'type': 'dttfc:fluid',
+        'primitive_soil': 'tfc:fluid/salt_water',
+        'acceptable_soils': ['water_like']
+    })
+    rm.blockstate('rooty_salt_water', model='dynamictrees:block/roots_water').with_lang(lang('rooty salt water'))
+    rm.item_model('rooty_salt_water', parent='dynamictrees:block/roots_water', no_textures=True)
 
 
 def soil_properties(rm: ResourceManager, name: str, tfc_soil: str, sub: str = None, soil_type: str = 'dirt_like', properties: str = None):
@@ -97,7 +116,7 @@ def grass_models(rm: ResourceManager, name: utils.ResourceIdentifier, texture: s
         rm.block_model((name, variant), {'texture': texture}, parent='tfc:block/grass_%s' % variant)
 
 
-def species(rm: ResourceManager, name: str, family_override: str = None, leaves_override: str = None, spec_type: str = None, tapering: float = None, signal_energy: float = None, up_probability: float = None, lowest_branch_height: float = None, growth_rate: float = None, growth_logic_kit: str = None, soil_str: int = None, soils: List[str] = None):
+def species(rm: ResourceManager, name: str, family_override: str = None, leaves_override: str = None, spec_type: str = None, tapering: float = None, signal_energy: float = None, up_probability: float = None, lowest_branch_height: float = None, growth_rate: float = None, growth_logic_kit: str = None, soil_str: int = None, soils: List[str] = None, extra_data: Dict[str, Any] = {}):
     res = ident(name)
     write(rm, 'species', name, {
         'type': spec_type,
@@ -112,10 +131,11 @@ def species(rm: ResourceManager, name: str, family_override: str = None, leaves_
         'growth_logic_kit': growth_logic_kit,
         'soil_longevity': soil_str,
         'acceptable_soils': soils,
+        **extra_data
     })
 
 
-def family(rm: ResourceManager, name: str, fam_type: str = None, max_branch_radius: int = None, conifer_variants: bool = None, thickness1: int = None, thickness2: int = None, roots: bool = None, max_signal: int = None):
+def family(rm: ResourceManager, name: str, fam_type: str = None, max_branch_radius: int = None, conifer_variants: bool = None, thickness1: int = None, thickness2: int = None, roots: bool = None, max_signal: int = None, extra_data: Dict[str, Any] = {}):
     res = ident(name)
     write(rm, 'families', name, {
         'type': fam_type,
@@ -129,6 +149,7 @@ def family(rm: ResourceManager, name: str, fam_type: str = None, max_branch_radi
         'secondary_thickness': thickness2,
         'generate_surface_root': roots,
         'max_signal_depth': max_signal,
+        **extra_data
     })
 
 

@@ -3,10 +3,12 @@
   "type": "dttfc:forest_entry",
   "config": {
     "entry": {
-      "min_rain": 290,
-      "max_rain": 500,
-      "min_temp": -16,
-      "max_temp": -1,
+      "climate": {
+        "min_rainfall": 290,
+        "max_rainfall": 500,
+        "min_temperature": -16,
+        "max_temperature": -1
+      },
       "groundcover": [
         {
           "block": "tfc:wood/twig/douglas_fir"

@@ -71,8 +71,16 @@ def generate(rm: ResourceManager):
 
         if name == 'kapok':
             rm.blockstate('%s_root' % name).with_lang(lang('%s root', name))
-            rm.custom_block_model('%s_root' % name, 'dynamictrees:root', {'textures': {'bark': 'tfc:block/wood/log/%s' % name}})
+            rm.custom_block_model('%s_root' % name, 'dynamictrees:surface_root', {'textures': {'bark': 'tfc:block/wood/log/%s' % name}})
 
+    rm.blockstate('mangrove_roots', variants={
+        'layer=covered': {'model': 'tfc:block/mud/loam'},
+        'layer=exposed': {'model': 'dttfc:block/tree_roots'},
+        'layer=filled': {'model': 'dttfc:block/muddy_roots'}
+    }).with_tag('tfc:toughness_3').with_tag('tfc:supports_landslide').with_lang(lang('mangrove roots'))
+    rm.custom_block_model('muddy_roots', 'dynamictrees:roots', {'textures': {'bark': 'tfc:block/mud/loam_roots_side', 'rings': 'tfc:block/mud/loam_roots_top'}, 'render_type': 'cutout_mipped'})
+    rm.custom_block_model('tree_roots', 'dynamictrees:roots', {'textures': {'bark': 'minecraft:block/mangrove_roots_side', 'rings': 'minecraft:block/mangrove_roots_top'}, 'render_type': 'cutout_mipped'})
+    rm.item_model('mangrove_roots', parent='dynamictrees:item/mangrove_roots')
 
 def leaves(rm: ResourceManager, name: str, base_name: str):
     if name == 'palm':
@@ -85,10 +93,11 @@ def leaves(rm: ResourceManager, name: str, base_name: str):
     else:
         leaf = rm.blockstate('%s_leaves' % name, model='tfc:block/wood/leaves/%s' % base_name)
 
+    seed_condition = cond('dynamictrees:seasonal_seed_drop_chance') if name != 'palm' else loot_tables.random_chance(0.3)
     leaf.with_block_loot(loot_tables.alternatives(({
         'name': 'tfc:wood/leaves/%s' % base_name,
         'conditions': [{
-            "condition": "minecraft:alternative",
+            "condition": "minecraft:any_of",
             "terms": [loot_tables.match_tag('forge:shears'), loot_tables.silk_touch()]
         }]
     }, {
@@ -96,7 +105,7 @@ def leaves(rm: ResourceManager, name: str, base_name: str):
         'conditions': [cond('dynamictrees:seasonal_seed_drop_chance')]
     }, {
         'name': 'minecraft:stick',
-        'conditions': [loot_tables.random_chance(0.02)]
+        'conditions': [seed_condition]
     })))
     leaf.with_tag('dynamictrees:leaves')
 
@@ -110,6 +119,8 @@ def leaves(rm: ResourceManager, name: str, base_name: str):
         'functions': [loot_tables.set_count(1, 2)],
         'conditions': [loot_tables.random_chance(0.05)]
     }, path='trees/leaves', loot_type='dynamictrees:leaves')
+
+    rm.block_tag('minecraft:replaceable', 'dynamictrees:rooty_water', 'dttfc:rooty_salt_water')
 
 def func(name: str):
     return {'function': name}
@@ -130,9 +141,9 @@ def lang(key: str, *args) -> str:
     return ((key % args) if len(args) > 0 else key).replace('_', ' ').replace('/', ' ').title()
 
 
-ALL_SPECIES = ['acacia', 'ash', 'aspen', 'birch', 'blackwood', 'chestnut', 'douglas_fir', 'hickory', 'kapok', 'maple', 'oak', 'palm', 'pine', 'rosewood', 'sequoia', 'spruce', 'sycamore', 'white_cedar', 'willow']
+ALL_SPECIES = ['acacia', 'ash', 'aspen', 'birch', 'blackwood', 'chestnut', 'douglas_fir', 'hickory', 'kapok', 'mangrove', 'maple', 'oak', 'palm', 'pine', 'rosewood', 'sequoia', 'spruce', 'sycamore', 'white_cedar', 'willow']
 LAND_BIOMES = ['plains', 'hills', 'lowlands', 'low_canyons', 'rolling_hills', 'badlands', 'inverted_badlands', 'plateau', 'canyons', 'mountains', 'old_mountains', 'oceanic_mountains', 'volcanic_mountains', 'volcanic_oceanic_mountains']
 DIRT_TYPES = ['sandy_loam', 'loam', 'silty_loam', 'silt']
 SAND_COLORS = ['black', 'brown', 'green', 'pink', 'red', 'white', 'yellow']
 
-NO_BUSHES = ['palm', 'rosewood', 'sycamore']
+NO_BUSHES = ['palm', 'rosewood', 'sycamore', 'mangrove']

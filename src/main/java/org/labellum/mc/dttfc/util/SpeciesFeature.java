@@ -26,7 +26,7 @@ public class SpeciesFeature extends Feature<SpeciesConfig>
     {
         final WorldGenLevel level = context.level();
         final BlockPos pos = context.origin();
-        final Random rand = context.random();
+        final var rand = context.random();
         final BlockPos groundPos = pos.below();
         final BlockState dirtState = level.getBlockState(groundPos);
         final Species species = context.config().species();
@@ -34,7 +34,7 @@ public class SpeciesFeature extends Feature<SpeciesConfig>
         {
             if (species.isAcceptableSoilForWorldgen(level, groundPos, dirtState))
             {
-                final Biome biome = level.getBiome(groundPos).value();
+                final var biome = level.getBiome(groundPos);
                 final LevelContext levelContext = LevelContext.create(context.level());
 
                 // noinspection removal

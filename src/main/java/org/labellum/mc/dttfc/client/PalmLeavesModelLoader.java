@@ -2,15 +2,15 @@ package org.labellum.mc.dttfc.client;
 
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
 import com.mojang.logging.LogUtils;
 import net.minecraft.ResourceLocationException;
 import net.minecraft.client.renderer.texture.MissingTextureAtlasSprite;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.packs.resources.ResourceManager;
-import net.minecraftforge.client.model.IModelLoader;
+import net.minecraftforge.client.model.geometry.IGeometryLoader;
 import org.slf4j.Logger;
 
-public class PalmLeavesModelLoader implements IModelLoader<PalmLeavesModelGeometry>
+public class PalmLeavesModelLoader implements IGeometryLoader<PalmLeavesModelGeometry>
 {
     public static final Logger LOGGER = LogUtils.getLogger();
 
@@ -18,12 +18,9 @@ public class PalmLeavesModelLoader implements IModelLoader<PalmLeavesModelGeomet
     private static final String TEXTURES = "textures";
 
     @Override
-    public void onResourceManagerReload(ResourceManager resourceManager) {}
-
-    @Override
-    public PalmLeavesModelGeometry read(JsonDeserializationContext deserializationContext, JsonObject modelObject)
+    public PalmLeavesModelGeometry read(JsonObject jsonObject, JsonDeserializationContext deserializationContext) throws JsonParseException
     {
-        final JsonObject textures = this.getTexturesObject(modelObject);
+        final JsonObject textures = this.getTexturesObject(jsonObject);
         return new PalmLeavesModelGeometry(getTextureLocation(textures, FROND));
     }
 

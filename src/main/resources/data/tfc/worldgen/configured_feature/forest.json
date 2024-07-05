@@ -22,7 +22,14 @@
       },
       "edge": {
         "tree_count": 4,
-        "groundcover_count": 15
+        "groundcover_count": 15,
+        "leaf_pile_count": {
+          "type": "uniform",
+          "value": {
+            "min_inclusive": 0,
+            "max_inclusive": 1
+          }
+        }
       },
       "normal": {
         "tree_count": 8,
@@ -32,7 +39,14 @@
       "old_growth": {
         "tree_count": 12,
         "groundcover_count": 40,
-        "allows_old_growth": true
+        "allows_old_growth": true,
+        "leaf_pile_count": {
+          "type": "uniform",
+          "value": {
+            "min_inclusive": 0,
+            "max_inclusive": 1
+          }
+        }
       }
     }
   }

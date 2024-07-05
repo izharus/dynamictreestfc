@@ -1,6 +1,5 @@
 from typing import get_args, Literal, Union, Optional
 
-from mcresources import ResourceManager
 from mcresources.type_definitions import Json
 
 from assets import *
@@ -17,6 +16,7 @@ def generate(rm: ResourceManager):
     forest_config(rm, 210, 400, 7, 15, 'hickory', True)
     forest_config(rm, 270, 500, 17, 40, 'kapok', False)
     forest_config(rm, 270, 500, -1, 15, 'maple', True)
+    forest_config(rm, 200, 500, 15.7, 28.2, 'mangrove', False)
     forest_config(rm, 240, 450, -9, 11, 'oak', False)
     forest_config(rm, 180, 470, 20, 35, 'palm', False)
     forest_config(rm, 60, 270, -18, -4, 'pine', True)
@@ -32,7 +32,8 @@ def generate(rm: ResourceManager):
     forest_config(rm, 0, 120, 0, 18, 'pipe_cactus', not_a_tree=True)
     forest_config(rm, 0, 80, 5, 15, 'mega_cactus', not_a_tree=True)
 
-    rm.configured_feature_tag('dynamic_forest_trees', *[ident(s) for s in ALL_SPECIES], *['%s_cactus' % c for c in ('saguaro', 'pillar', 'pipe', 'mega')])
+    rm.configured_feature_tag('dynamic_forest_trees', *[ident(s) for s in ALL_SPECIES if s != 'mangrove'], *['%s_cactus' % c for c in ('saguaro', 'pillar', 'pipe', 'mega')])
+    rm.configured_feature_tag('dynamic_forest_trees_salt_marsh', 'dttfc:mangrove')
 
     rm.domain = 'tfc'
     rm.configured_feature('forest', 'dttfc:forest', {
@@ -50,7 +51,8 @@ def generate(rm: ResourceManager):
             },
             'edge': {
                 'tree_count': 4,
-                'groundcover_count': 15
+                'groundcover_count': 15,
+                'leaf_pile_count': uniform_int(0, 1)
             },
             'normal': {
                 'tree_count': 8,
@@ -60,7 +62,37 @@ def generate(rm: ResourceManager):
             'old_growth': {
                 'tree_count': 12,
                 'groundcover_count': 40,
-                'allows_old_growth': True
+                'allows_old_growth': True,
+                'leaf_pile_count': uniform_int(0, 1)
+            }
+        }
+    })
+    rm.configured_feature('mangrove_forest', 'dttfc:forest', {
+        'entries': '#dttfc:dynamic_forest_trees_salt_marsh',
+        'types': {
+            'none': {'per_chunk_chance': 0},
+            'sparse': {
+                'tree_count': uniform_int(1, 3),
+                'groundcover_count': 6,
+                'per_chunk_chance': 0.08,
+                'bush_count': 0,
+                'has_spoiler_old_growth': True
+            },
+            'edge': {
+                'tree_count': 2,
+                'groundcover_count': 10,
+                'leaf_pile_count': uniform_int(0, 1)
+            },
+            'normal': {
+                'tree_count': 5,
+                'groundcover_count': 25,
+                'has_spoiler_old_growth': True
+            },
+            'old_growth': {
+                'tree_count': 7,
+                'groundcover_count': 40,
+                'allows_old_growth': True,
+                'leaf_pile_count': uniform_int(0, 1)
             }
         }
     })
@@ -79,10 +111,12 @@ def generate(rm: ResourceManager):
 def forest_config(rm: ResourceManager, min_rain: float, max_rain: float, min_temp: float, max_temp: float, tree: str, old_growth: bool = False, old_growth_chance: int = None, spoiler_chance: int = None, not_a_tree: bool = False):
     is_tree = not not_a_tree
     cfg = {
-        'min_rain': min_rain,
-        'max_rain': max_rain,
-        'min_temp': min_temp,
-        'max_temp': max_temp,
+        'climate': {
+            'min_rainfall': min_rain,
+            'max_rainfall': max_rain,
+            'min_temperature': min_temp,
+            'max_temperature': max_temp,
+        },
         'groundcover': [{'block': 'tfc:wood/twig/%s' % tree}] if is_tree else None,
         'normal_tree': 'tfc:tree/%s' % tree if is_tree else 'dttfc:noop',
         'dead_tree': 'tfc:tree/%s_dead' % tree if is_tree else 'dttfc:noop',

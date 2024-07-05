@@ -1,6 +1,6 @@
 {
   "__comment__": "This file was automatically created by mcresources",
-  "loader": "dynamictrees:root",
+  "loader": "dynamictrees:surface_root",
   "textures": {
     "bark": "tfc:block/wood/log/kapok"
   }

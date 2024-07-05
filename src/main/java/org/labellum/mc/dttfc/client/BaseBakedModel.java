@@ -1,7 +1,7 @@
 package org.labellum.mc.dttfc.client;
 
 import net.minecraft.client.renderer.block.model.ItemOverrides;
-import net.minecraftforge.client.model.data.IDynamicBakedModel;
+import net.minecraftforge.client.model.IDynamicBakedModel;
 
 public abstract class BaseBakedModel implements IDynamicBakedModel
 {
@@ -11,11 +11,6 @@ public abstract class BaseBakedModel implements IDynamicBakedModel
         return ItemOverrides.EMPTY;
     }
 
-    @Override
-    public boolean doesHandlePerspectives()
-    {
-        return false;
-    }
 
     @Override
     public boolean useAmbientOcclusion()

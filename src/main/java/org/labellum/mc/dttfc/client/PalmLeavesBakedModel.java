@@ -5,13 +5,11 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Random;
 import com.ferreusveritas.dynamictrees.block.leaves.PalmLeavesProperties;
 import com.ferreusveritas.dynamictrees.client.ModelUtils;
 import com.ferreusveritas.dynamictrees.util.CoordUtils;
 import com.google.common.primitives.Ints;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.BlockModel;
 import net.minecraft.client.renderer.block.model.FaceBakery;
@@ -22,8 +20,11 @@ import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.SimpleBakedModel;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.client.model.data.IModelData;
+import net.minecraftforge.client.model.data.ModelData;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class PalmLeavesBakedModel extends BaseBakedModel
 {
@@ -50,7 +51,7 @@ public class PalmLeavesBakedModel extends BaseBakedModel
         for (CoordUtils.Surround surr : CoordUtils.Surround.values())
         {
 
-            SimpleBakedModel.Builder builder = new SimpleBakedModel.Builder(blockModel.customData, ItemOverrides.EMPTY).particle(frondsTexture);
+            SimpleBakedModel.Builder builder = new SimpleBakedModel.Builder(blockModel, ItemOverrides.EMPTY, false).particle(frondsTexture);
 
             BlockVertexData[] quadData = {
                 new BlockVertexData(0, 0, 3, 15, 4),
@@ -199,9 +200,9 @@ public class PalmLeavesBakedModel extends BaseBakedModel
         }
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @Nonnull Random rand, @Nonnull IModelData extraData)
+    public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @NotNull RandomSource rand, @NotNull ModelData extraData, @Nullable RenderType renderType)
     {
         if (state == null || side != null)
             return Collections.emptyList();
@@ -211,7 +212,7 @@ public class PalmLeavesBakedModel extends BaseBakedModel
         int direction = state.getValue(PalmLeavesProperties.DynamicPalmLeavesBlock.DIRECTION);
 
         if (direction != 0)
-            quads.addAll(bakedFronds[direction - 1].getQuads(state, null, rand, extraData));
+            quads.addAll(bakedFronds[direction - 1].getQuads(state, null, rand, extraData, renderType));
 
 
         return quads;

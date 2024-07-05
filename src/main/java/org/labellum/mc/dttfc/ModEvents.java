@@ -6,12 +6,15 @@ import com.ferreusveritas.dynamictrees.api.registry.TypeRegistryEvent;
 import com.ferreusveritas.dynamictrees.block.rooty.SoilProperties;
 import com.ferreusveritas.dynamictrees.growthlogic.GrowthLogicKit;
 import com.ferreusveritas.dynamictrees.tree.family.Family;
+import org.labellum.mc.dttfc.tree.AerialRootsFluidSoilProperties;
 import org.labellum.mc.dttfc.tree.DiagonalPalmFamily;
 import org.labellum.mc.dttfc.tree.DiagonalPalmLogic;
+import org.labellum.mc.dttfc.tree.FluidSoilProperties;
 import org.labellum.mc.dttfc.tree.GrassSoilProperties;
 import org.labellum.mc.dttfc.tree.PalmCellKit;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import org.labellum.mc.dttfc.tree.TFCMangroveFamily;
 
 public final class ModEvents
 {
@@ -28,6 +31,7 @@ public final class ModEvents
     public static void registerFamilies(TypeRegistryEvent<Family> event)
     {
         event.registerType(DTTFC.identifier("diagonal_palm"), DiagonalPalmFamily.TYPE);
+        event.registerType(DTTFC.identifier("mangrove"), TFCMangroveFamily.TFC_TYPE);
     }
 
     public static void registerGrowth(RegistryEvent<GrowthLogicKit> event)
@@ -43,6 +47,8 @@ public final class ModEvents
     public static void registerSoils(TypeRegistryEvent<SoilProperties> event)
     {
         event.registerType(DTTFC.identifier("grass"), GrassSoilProperties.TYPE);
+        event.registerType(DTTFC.identifier("fluid"), FluidSoilProperties.TYPE);
+        event.registerType(DTTFC.identifier("aerial_roots"), AerialRootsFluidSoilProperties.TFC_TYPE);
     }
 
 

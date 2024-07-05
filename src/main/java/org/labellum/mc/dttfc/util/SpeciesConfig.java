@@ -11,7 +11,7 @@ public record SpeciesConfig(Species species) implements FeatureConfiguration
     public static final Codec<SpeciesConfig> CODEC = ResourceLocation.CODEC.fieldOf("species").codec().comapFlatMap(
         res -> {
             final Species species = Species.REGISTRY.get(res);
-            return species == null ? DataResult.error("not a species: " + res) : DataResult.success(new SpeciesConfig(species));
+            return species == null ? DataResult.error(() -> "not a species: " + res) : DataResult.success(new SpeciesConfig(species));
         }, s -> s.species.getRegistryName()
     );
 }

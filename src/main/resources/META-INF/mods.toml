@@ -5,7 +5,7 @@ issueTrackerURL="https://github.com/Gaelmare/dynamictreestfc/issues" #optional
 [[mods]] #mandatory
 # The modid of the mod
 modId= "dttfc" #mandatory
-version="1.18.2-1.0.0-rc2" #mandatory
+version="${file.jarVersion}" #mandatory
 displayName="Dynamic Trees TFC" #mandatory
 logoFile="dttfc.png" #optional
 authors="Gaelmare and EERussianguy" #optional
@@ -39,6 +39,6 @@ An addon for TFC and Dynamic Trees.
 [[dependencies.dttfc]]
     modId="minecraft"
     mandatory=true
-    versionRange="[1.18.1,1.19)"
+    versionRange="[1.20.1,1.21)"
     ordering="NONE"
     side="BOTH"

@@ -3,10 +3,14 @@ package org.labellum.mc.dttfc;
 import com.ferreusveritas.dynamictrees.DynamicTrees;
 import com.ferreusveritas.dynamictrees.api.FutureBreakable;
 import com.ferreusveritas.dynamictrees.init.DTConfigs;
+import net.minecraft.world.item.Item;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.registries.ForgeRegistries;
 
+import net.dries007.tfc.common.TFCCreativeTabs;
 import net.dries007.tfc.util.events.LoggingEvent;
 
 import static org.labellum.mc.dttfc.ConfigDTTFC.DT_TWEAKS;
@@ -19,6 +23,7 @@ public final class ForgeEvents
 
         bus.addListener(ForgeEvents::onLoggedIn);
         bus.addListener(ForgeEvents::onLogging);
+        bus.addListener(ForgeEvents::onCreativeTabs);
         //bus.addListener(ForgeEvents::onBreakSpeed);
     }
 
@@ -37,6 +42,19 @@ public final class ForgeEvents
         if (event.getState().getBlock() instanceof FutureBreakable)
         {
             event.setCanceled(true);
+        }
+    }
+
+    public static void onCreativeTabs(BuildCreativeModeTabContentsEvent event)
+    {
+        if (event.getTab() == TFCCreativeTabs.WOOD.tab().get())
+        {
+            ForgeRegistries.ITEMS.getEntries().forEach((entry) -> {
+                if (entry.getKey().location().getNamespace().equals(DTTFC.MOD_ID))
+                {
+                    event.accept(entry.getValue());
+                }
+            });
         }
     }
 
