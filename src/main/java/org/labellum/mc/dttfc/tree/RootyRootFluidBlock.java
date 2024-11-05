@@ -63,7 +63,7 @@ public class RootyRootFluidBlock extends AerialRootsSoilProperties.RootRootyBloc
     @Override
     public FluidState getFluidState(BlockState state)
     {
-        return IFluidLoggable.super.getFluidState(state);
+        return IFluidLoggable.super.getFluidLoggedState(state);
     }
 
     @Override
