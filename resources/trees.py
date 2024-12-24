@@ -5,6 +5,12 @@ import shutil
 
 JO_PATH = '../src/main/resources/trees/dttfc/jo_codes/'
 
+MEGA_SPRUCE_LOGIC_KIT = {
+		'name': 'conifer',
+		'properties': {
+			'energy_divisor': 5,
+		},
+	}
 
 def generate(rm: ResourceManager):
     for name in ALL_SPECIES:
@@ -22,6 +28,8 @@ def generate(rm: ResourceManager):
             species(rm, name, tapering=0.2, signal_energy=24, up_probability=3, lowest_branch_height=2, growth_rate=1, growth_logic_kit='jungle')
         elif name == 'mangrove':
             species(rm, name, tapering=0.25, signal_energy=20, up_probability=8, lowest_branch_height=2, growth_rate=0.6, spec_type='mangrove', soils=['dirt_like', 'mud_like', 'water_like'], extra_data={'root_tapering': 0.2, 'root_signal_energy': 20.0, 'roots_growth_logic_kit': 'mangrove_roots', 'primitive_sapling': 'mangrove_propagule', 'model_overrides': {'sapling': 'dynamictrees:block/smartmodel/water_sapling_thin'}, 'plantable_on_fluid': True})
+        elif name == 'douglas_fir':
+            species(rm, name, tapering=0.20, signal_energy=32, up_probability=9, lowest_branch_height=3, growth_rate=0.8, growth_logic_kit=MEGA_SPRUCE_LOGIC_KIT)
         elif name == "rosewood":
             species(rm, name, tapering=0.3, signal_energy=16, up_probability=0.0, lowest_branch_height=6, growth_rate=0.7, growth_logic_kit="dark_oak")
         else:
@@ -42,7 +50,7 @@ def generate(rm: ResourceManager):
 
         if name == 'acacia':
             leaves_properties(rm, name, cell_kit='dynamictrees:acacia', smother=2)
-        elif name == 'sequoia' or name == 'spruce':
+        elif name == 'sequoia' or name == 'spruce' or name == 'douglas_fir':
             leaves_properties(rm, name, cell_kit='dynamictrees:conifer', smother=3)
         elif name == 'palm':
             leaves_properties(rm, name, cell_kit='dttfc:palm', leaf_type='palm')
