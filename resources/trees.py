@@ -22,6 +22,8 @@ def generate(rm: ResourceManager):
             species(rm, name, tapering=0.2, signal_energy=24, up_probability=3, lowest_branch_height=2, growth_rate=1, growth_logic_kit='jungle')
         elif name == 'mangrove':
             species(rm, name, tapering=0.25, signal_energy=20, up_probability=8, lowest_branch_height=2, growth_rate=0.6, spec_type='mangrove', soils=['dirt_like', 'mud_like', 'water_like'], extra_data={'root_tapering': 0.2, 'root_signal_energy': 20.0, 'roots_growth_logic_kit': 'mangrove_roots', 'primitive_sapling': 'mangrove_propagule', 'model_overrides': {'sapling': 'dynamictrees:block/smartmodel/water_sapling_thin'}, 'plantable_on_fluid': True})
+        elif name == "rosewood":
+            species(rm, name, tapering=0.3, signal_energy=16, up_probability=0.0, lowest_branch_height=6, growth_rate=0.7, growth_logic_kit="dark_oak")
         else:
             species(rm, name)
 
@@ -48,6 +50,8 @@ def generate(rm: ResourceManager):
             leaves_properties(rm, name, light=12)
         elif name == 'mangrove':
             leaves_properties(rm, name, leaf_type='scruffy', smother=6)
+        elif name == "rosewood":
+            leaves_properties(rm, name, cell_kit='dynamictrees:acacia')
         else:
             leaves_properties(rm, name)
 
