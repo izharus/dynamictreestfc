@@ -34,6 +34,8 @@ def generate(rm: ResourceManager):
             species(rm, name, tapering=0.3, signal_energy=16, up_probability=0.0, lowest_branch_height=6, growth_rate=0.7, growth_logic_kit="dark_oak")
         elif name in ["hickory", "chestnut", "blackwood"]:
             species(rm, name, tapering=0.25, signal_energy=20, up_probability=0, lowest_branch_height=6, growth_rate=1, growth_logic_kit="dark_oak")
+        elif name == 'maple':
+            species(rm, name, tapering=0.25, signal_energy=15, up_probability=8, lowest_branch_height=7, growth_rate=1)
         else:
             species(rm, name)
 
