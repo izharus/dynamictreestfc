@@ -18,6 +18,8 @@ def generate(rm: ResourceManager):
             species(rm, name, tapering=0.15, signal_energy=12, up_probability=0, lowest_branch_height=3, growth_rate=0.7)
         elif name == 'birch':
             species(rm, name, tapering=0.1, signal_energy=14, up_probability=4, lowest_branch_height=4, growth_rate=1.25),
+        elif name == 'aspen':
+            species(rm, name, tapering=0.12, signal_energy=14, up_probability=4, lowest_branch_height=4, growth_rate=1.25),
         elif name == 'sequoia':
             species(rm, name, tapering=0.25, signal_energy=24, up_probability=3, lowest_branch_height=4, growth_rate=1.2, growth_logic_kit='conifer')
         elif name == 'spruce':
