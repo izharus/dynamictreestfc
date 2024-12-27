@@ -40,6 +40,8 @@ def generate(rm: ResourceManager):
             species(rm, name, tapering=0.25, signal_energy=15, up_probability=8, lowest_branch_height=7, growth_rate=1)
         elif name == 'sycamore':
             species(rm, name, tapering=0.1, signal_energy=12, up_probability=12, lowest_branch_height=3, growth_rate=1.2)
+        elif name == 'pine':
+            species(rm, name, tapering=0.20, signal_energy=20, up_probability=9, lowest_branch_height=5, growth_rate=1.1, growth_logic_kit=MEGA_SPRUCE_LOGIC_KIT)
         else:
             species(rm, name)
 
@@ -51,6 +53,8 @@ def generate(rm: ResourceManager):
             family(rm, name, max_branch_radius=24, roots=True, max_signal=64)
         elif name == 'mangrove':
             family(rm, name, fam_type='dttfc:mangrove', max_branch_radius=8, extra_data={'default_soil': 'dttfc:mangrove_aerial_roots', 'primitive_root': 'tfc:tree_roots', 'primitive_filled_root': 'tfc:muddy_roots/loam', 'primitive_covered_root': 'tfc:mud/loam', 'root_system_acceptable_soils': ['dirt_like', 'mud_like', 'sand_like']})
+        elif name == 'pine':
+            family(rm, name, conifer_variants=True)
         else:
             family(rm, name)
 
@@ -58,7 +62,7 @@ def generate(rm: ResourceManager):
             leaves_properties(rm, name, cell_kit='dynamictrees:acacia', smother=2)
         elif name  in ['douglas_fir', 'sequoia']:
             leaves_properties(rm, name, cell_kit='dynamictrees:conifer', smother=3)    
-        elif name == 'spruce':
+        elif name in ['spruce', 'pine']:
             leaves_properties(rm, name, cell_kit='dynamictrees:conifer')
         elif name == 'palm':
             leaves_properties(rm, name, cell_kit='dttfc:palm', leaf_type='palm')
