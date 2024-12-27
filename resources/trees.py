@@ -41,9 +41,7 @@ def generate(rm: ResourceManager):
         else:
             species(rm, name)
 
-        if name == 'birch':
-            family(rm, name, conifer_variants=True)
-        elif name == 'sequoia' or name == 'spruce':
+        if name == 'sequoia' or name == 'spruce':
             family(rm, name, max_branch_radius=24, conifer_variants=True)
         elif name == 'palm':
             family(rm, name, thickness1=3, thickness2=4, fam_type='dttfc:diagonal_palm')
