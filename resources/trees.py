@@ -50,8 +50,10 @@ def generate(rm: ResourceManager):
 
         if name == 'acacia':
             leaves_properties(rm, name, cell_kit='dynamictrees:acacia', smother=2)
-        elif name == 'sequoia' or name == 'spruce' or name == 'douglas_fir':
-            leaves_properties(rm, name, cell_kit='dynamictrees:conifer', smother=3)
+        elif name  in ['douglas_fir', 'sequoia']:
+            leaves_properties(rm, name, cell_kit='dynamictrees:conifer', smother=3)    
+        elif name == 'spruce':
+            leaves_properties(rm, name, cell_kit='dynamictrees:conifer')
         elif name == 'palm':
             leaves_properties(rm, name, cell_kit='dttfc:palm', leaf_type='palm')
         elif name == 'kapok':
